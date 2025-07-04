@@ -38,3 +38,20 @@ def deletar_pedido(db: Session, pedido_id: int):
         db.delete(pedido)
         db.commit()
     return pedido
+
+def criar_pedidos_em_lote(db: Session, pedidos_data: list[dict]):
+    pedidos = []
+    for data in pedidos_data:
+        pedido = Pedido(
+            cliente=data["cliente"],
+            item=data["item"],
+            quantidade=data["quantidade"],
+            preco_unitario=data["preco_unitario"]
+        )
+        db.add(pedido)
+        pedidos.append(pedido)
+
+    db.commit()
+    for pedido in pedidos:
+        db.refresh(pedido)
+    return pedidos
